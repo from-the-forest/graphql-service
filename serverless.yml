@@ -22,6 +22,10 @@ custom:
     NODE_ENV: '${ssm:/${self:app}/${opt:stage}/infra/node-env}'
     NODE_VERSION: 'nodejs14.x'
 
+    # apollo
+    APOLLO_KEY: '${ssm:/${self:app}/${opt:stage}/apollo/key}'
+    APOLLO_GRAPH_ID: '${ssm:/${self:app}/${opt:stage}/apollo/graph-id}'
+
   prune:
     automatic: true
     number: 3
@@ -41,7 +45,11 @@ provider:
 
   environment:
     NODE_ENV: '${self:custom.vars.NODE_ENV}' 
-    
+    APOLLO_KEY: '${self:custom.vars.NODE_ENV}'  
+    APOLLO_GRAPH_ID: '${self:custom.vars.APOLLO_GRAPH_ID}'  
+    APOLLO_GRAPH_VARIANT: current
+    APOLLO_SCHEMA_REPORTING: true
+
 functions:
 
   private:
