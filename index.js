@@ -1,18 +1,19 @@
-/**
- * This gateway uses managed federation
- */
-const { ApolloServer } = require('apollo-server');
-const { ApolloGateway } = require('@apollo/gateway');
+require('dotenv').config()
 
-// Initialize an ApolloGateway instance and pass it
-// the supergraph schema
-const gateway = new ApolloGateway();
+const { ApolloServer } = require('apollo-server')
+const { ApolloGateway } = require('@apollo/gateway')
+const { ApolloServerPluginLandingPageGraphQLPlayground } = require('apollo-server-core')
 
-// Pass the ApolloGateway to the ApolloServer constructor
+// managed federation
+const gateway = new ApolloGateway()
+
 const server = new ApolloServer({
-  gateway
-});
+  gateway,
+  plugins: [
+    ApolloServerPluginLandingPageGraphQLPlayground()
+  ]
+})
 
 server.listen().then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
-});
+  console.log(`🚀 Server ready at ${url}`)
+})

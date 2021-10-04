@@ -1,0 +1,76 @@
+service: '${self:custom.vars.SERVICE_NAME}'
+
+app: ftf
+
+plugins:
+  - serverless-prune-plugin
+
+custom:
+  vars:
+    # general
+    SERVICE_NAME: graphql-service 
+    RESOURCE_NAMESPACE: '${self:app}-${opt:stage}-${self:service}'
+    SSM_NAMESPACE: '/${self:app}/${opt:stage}/${self:service}'
+
+    # api gateway
+    STAGE: v1
+    REST_API_ID: '${ssm:/${self:app}/${opt:stage}/api/gateway/id}'
+    PUBLIC_RESOURCE_ID: '${ssm:/${self:app}/${opt:stage}/api/public/resource/id}'
+
+    # node
+    NODE_ENV: '${ssm:/${self:app}/${opt:stage}/infra/node-env}'
+    NODE_VERSION: 'nodejs14.x'
+
+  prune:
+    automatic: true
+    number: 3
+
+provider:
+  name: aws
+
+  runtime: '${self:custom.vars.NODE_VERSION}'
+  timeout: 6
+  stackName: '${self:custom.vars.RESOURCE_NAMESPACE}'
+
+  apiGateway:
+    restApiId: '${self:custom.vars.REST_API_ID}'
+    restApiRootResourceId:
+      Ref: StripeWebhooksResource
+
+  environment:
+    NODE_ENV: '${self:custom.vars.NODE_ENV}' 
+    STRIPE_API_KEY: '${self:custom.vars.STRIPE_API_KEY}'
+    
+functions:
+
+  private:
+    name: '${self:custom.vars.RESOURCE_NAMESPACE}-private-subgraph'
+    handler: lambda.handler
+    enviornment:
+      SECURITY: private
+
+  public:
+    name: '${self:custom.vars.RESOURCE_NAMESPACE}-public-subgraph'
+    handler: lambda.handler
+    enviornment:
+      SECURITY: public
+
+  webhooks:
+    name: '${self:custom.vars.RESOURCE_NAMESPACE}-webhooks'
+    handler: webhooks/index.handler
+    environment:
+      STRIPE_SIGNING_SECRET: '${self:custom.vars.STRIPE_SIGNING_SECRET}'
+    events:
+    - http:
+        path: webhook
+        method: post
+
+# resources:
+#   Resources:
+
+#     StripeWebhooksResource:
+#       Type: AWS::ApiGateway::Resource
+#       Properties:
+#         RestApiId: '${self:custom.vars.REST_API_ID}'
+#         ParentId: '${self:custom.vars.PUBLIC_RESOURCE_ID}'
+#         PathPart: stripe 
