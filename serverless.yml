@@ -15,6 +15,7 @@ custom:
     # api gateway
     STAGE: v1
     REST_API_ID: '${ssm:/${self:app}/${opt:stage}/api/gateway/id}'
+    ROOT_RESOURCE_ID: '${ssm:/${self:app}/${opt:stage}/api/root-resource/id}'
     PUBLIC_RESOURCE_ID: '${ssm:/${self:app}/${opt:stage}/api/public/resource/id}'
 
     # node
@@ -35,7 +36,7 @@ provider:
   apiGateway:
     restApiId: '${self:custom.vars.REST_API_ID}'
     restApiRootResourceId:
-      Ref: StripeWebhooksResource
+      Ref: '${self:custom.vars.ROOT_RESOURCE_ID}'
 
   environment:
     NODE_ENV: '${self:custom.vars.NODE_ENV}' 
@@ -48,7 +49,14 @@ functions:
     timeout: 10
     enviornment:
       SECURITY: private
-
+    events:
+    - http:
+        path: graphql 
+        method: post
+    - http:
+        path: graphql 
+        method: get
+  
   # public:
   #   name: '${self:custom.vars.RESOURCE_NAMESPACE}-public-subgraph'
   #   handler: lambda.handler
