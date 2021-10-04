@@ -47,7 +47,7 @@ functions:
     name: '${self:custom.vars.RESOURCE_NAMESPACE}-private-subgraph'
     handler: lambda.handler
     timeout: 10
-    enviornment:
+    environment:
       SECURITY: private
     events:
     - http:
