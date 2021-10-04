@@ -32,10 +32,10 @@ provider:
   timeout: 6
   stackName: '${self:custom.vars.RESOURCE_NAMESPACE}'
 
-  # apiGateway:
-  #   restApiId: '${self:custom.vars.REST_API_ID}'
-  #   restApiRootResourceId:
-  #     Ref: StripeWebhooksResource
+  apiGateway:
+    restApiId: '${self:custom.vars.REST_API_ID}'
+    restApiRootResourceId:
+      Ref: StripeWebhooksResource
 
   environment:
     NODE_ENV: '${self:custom.vars.NODE_ENV}' 
@@ -45,6 +45,7 @@ functions:
   private:
     name: '${self:custom.vars.RESOURCE_NAMESPACE}-private-subgraph'
     handler: lambda.handler
+    timeout: 10
     enviornment:
       SECURITY: private
 
