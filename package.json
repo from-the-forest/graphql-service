@@ -1,0 +1,27 @@
+{
+  "name": "graphql-service",
+  "version": "1.0.0",
+  "description": "Apollo Federation Gateway",
+  "main": "index.js",
+  "scripts": {
+    "apollo:compose": "rover "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/from-the-forest/graphql-service.git"
+  },
+  "author": "Joe Cuffney <jcuffney@fromtheforest.io>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/from-the-forest/graphql-service/issues"
+  },
+  "homepage": "https://github.com/from-the-forest/graphql-service#readme",
+  "dependencies": {
+    "@apollo/gateway": "^0.42.0",
+    "apollo-server": "^3.3.0",
+    "graphql": "^15.6.0"
+  },
+  "devDependencies": {
+    "@apollo/rover": "^0.3.0"
+  }
+}
