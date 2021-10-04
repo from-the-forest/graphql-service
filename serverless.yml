@@ -33,10 +33,11 @@ provider:
   timeout: 6
   stackName: '${self:custom.vars.RESOURCE_NAMESPACE}'
 
+  lambdaHashingVersion: 20201221
+
   apiGateway:
     restApiId: '${self:custom.vars.REST_API_ID}'
-    restApiRootResourceId:
-      Ref: '${self:custom.vars.ROOT_RESOURCE_ID}'
+    restApiRootResourceId: '${self:custom.vars.NODE_VERSION}'
 
   environment:
     NODE_ENV: '${self:custom.vars.NODE_ENV}' 
@@ -53,9 +54,13 @@ functions:
     - http:
         path: graphql 
         method: post
+        cors: true
+        # authorizer: 
     - http:
         path: graphql 
         method: get
+        cors: true
+        # authorizer: 
   
   # public:
   #   name: '${self:custom.vars.RESOURCE_NAMESPACE}-public-subgraph'
@@ -66,9 +71,16 @@ functions:
 # resources:
 #   Resources:
 
-#     StripeWebhooksResource:
-#       Type: AWS::ApiGateway::Resource
-#       Properties:
-#         RestApiId: '${self:custom.vars.REST_API_ID}'
-#         ParentId: '${self:custom.vars.PUBLIC_RESOURCE_ID}'
-#         PathPart: stripe 
+    # GraphQLResource:
+    #   Type: AWS::ApiGateway::Resource
+    #   Properties:
+    #     RestApiId: '${self:custom.vars.REST_API_ID}'
+    #     ParentId: '${self:custom.vars.ROOT_RESOURCE_ID}'
+    #     PathPart: graphql
+
+    # PublicGraphQLResource:
+    #   Type: AWS::ApiGateway::Resource
+    #   Properties:
+    #     RestApiId: '${self:custom.vars.REST_API_ID}'
+    #     ParentId: '${self:custom.vars.PUBLIC_ROOT_RESOURCE_ID}'
+    #     PathPart: graphql
