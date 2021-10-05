@@ -23,8 +23,9 @@ custom:
     NODE_VERSION: 'nodejs14.x'
 
     # apollo
-    APOLLO_KEY: '${ssm:/${self:app}/${opt:stage}/apollo/key}'
-    APOLLO_GRAPH_ID: '${ssm:/${self:app}/${opt:stage}/apollo/graph-id}'
+    APOLLO_PRIVATE_KEY: '${ssm:/${self:app}/${opt:stage}/apollo/key/private}'
+    APOLLO_PRIVATE_GRAPH_ID: '${ssm:/${self:app}/${opt:stage}/apollo/graph-id/private}'
+    APOLLO_PUBLIC_GRAPH_ID: '${ssm:/${self:app}/${opt:stage}/apollo/graph-id/public}'
 
   prune:
     automatic: true
@@ -45,8 +46,6 @@ provider:
 
   environment:
     NODE_ENV: '${self:custom.vars.NODE_ENV}' 
-    APOLLO_KEY: '${self:custom.vars.APOLLO_KEY}'  
-    APOLLO_GRAPH_ID: '${self:custom.vars.APOLLO_GRAPH_ID}'  
     APOLLO_GRAPH_VARIANT: current
     APOLLO_SCHEMA_REPORTING: true
 
@@ -58,6 +57,8 @@ functions:
     timeout: 10
     environment:
       SECURITY: private
+      APOLLO_KEY: '${self:custom.vars.APOLLO_PRIVATE_KEY}'  
+      APOLLO_GRAPH_ID: '${self:custom.vars.APOLLO_PRIVATE_GRAPH_ID}'  
     events:
     - http:
         path: graphql 
