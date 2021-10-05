@@ -34,6 +34,19 @@ jobs:
       - node/install-packages
       - run: npx serverless deploy --stage ${CIRCLE_BRANCH}
 
+  api-deploy:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - jq/install
+      - aws-cli/setup
+      - run: 
+          command: |
+            API_ID=$(aws ssm get-parameter --name /ftf/${CIRCLE_BRANCH}/api/gateway/id | jq -r '.Parameter.Value')
+            API_STAGE_NAME=v1
+            aws apigateway create-deployment --rest-api-id $API_ID --stage-name $API_STAGE_NAME
+            aws apigateway flush-stage-cache --rest-api-id $API_ID --stage-name $API_STAGE_NAME
+
   # integration:
   #   executor: node/default
   #   steps:
@@ -57,6 +70,14 @@ workflows:
           requires:
             - lint
             - test
+          filters:
+            branches:
+              only:
+                - main
+      - api-deploy:
+          context: FTF
+          requires:
+            - deploy
           filters:
             branches:
               only:
