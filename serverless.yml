@@ -45,7 +45,7 @@ provider:
 
   environment:
     NODE_ENV: '${self:custom.vars.NODE_ENV}' 
-    APOLLO_KEY: '${self:custom.vars.NODE_ENV}'  
+    APOLLO_KEY: '${self:custom.vars.APOLLO_KEY}'  
     APOLLO_GRAPH_ID: '${self:custom.vars.APOLLO_GRAPH_ID}'  
     APOLLO_GRAPH_VARIANT: current
     APOLLO_SCHEMA_REPORTING: true
